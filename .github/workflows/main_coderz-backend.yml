@@ -39,4 +39,4 @@ jobs:
           DB_HOST: ${{ secrets.DB_HOST }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
           REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
-        run: pm2 start dist/index.js --name nodedeploy
+        run: pm2 start dist/index.js --name nodedeploy -f

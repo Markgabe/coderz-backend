@@ -12,6 +12,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+app.get('/.well-known/pki-validation/godaddy.html', (req, res) => { res.send('sndiv9ldc27v0vg1r8eka8lode'); });
 app.use(router);
 
 app.listen(process.env.PORT || 3333);

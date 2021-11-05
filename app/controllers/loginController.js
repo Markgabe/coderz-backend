@@ -34,17 +34,17 @@ function refreshTokenFunction(req, res) {
 async function login(req, res) {
   const { email } = req.body;
 
-  const foundUser = await User.findAll({
+  const foundUsers = await User.findAll({
     where: { email },
   });
 
-  if (foundUser.length === 0) {
+  if (foundUsers.length === 0) {
     res.sendStatus(400);
   } else {
     const accessToken = generateAccessToken(email);
     const refreshToken = jwt.sign({ email }, process.env.REFRESH_TOKEN_SECRET);
     refreshTokens.push(refreshToken);
-    res.status(200).json({ accessToken, refreshToken });
+    res.status(200).json({ accessToken, refreshToken, user: foundUsers[0] });
   }
 }
 

@@ -2,8 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
+import https from 'https';
+import path from 'path';
+import fs from 'fs';
+
 import router from './routes';
 
+const homedir = require('os').homedir();
 require('dotenv').config();
 
 const app = express();
@@ -12,13 +17,16 @@ app.use(helmet());
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
-app.get('/.well-known/pki-validation/A37BA752A9687A1E1947DCD40C9400EF.txt', (req, res) => {
-  res.send(
-    `5BDF29BFFB5FD05117673C7FCF437827D8C72739FF35E12920962A2FA06CEC56
-comodoca.com
-32dc348b9b4fea2`,
-  );
-});
 app.use(router);
+
+if (process.env.ENVIRONMENT !== 'development') {
+  const httpsServer = https.createServer({
+    cert: fs.readFileSync(path.join(homedir, 'cert', 'certificate.crt')),
+    ca: fs.readFileSync(path.join(homedir, 'cert', 'ca_bundle.crt')),
+    key: fs.readFileSync(path.join(homedir, 'cert', 'private.key')),
+  }, app);
+
+  httpsServer.listen(process.env.HTTPS_PORT || 3443);
+}
 
 app.listen(process.env.PORT || 3333);

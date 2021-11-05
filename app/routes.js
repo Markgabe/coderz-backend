@@ -4,6 +4,7 @@ import loginController from './controllers/loginController';
 
 const router = express.Router();
 
+router.get('/', (req, res) => res.sendStatus(200));
 router.post('/login', loginController.login);
 router.post('/token', loginController.refreshTokenFunction);
 router.delete('/logout', loginController.logout);

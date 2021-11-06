@@ -3,6 +3,13 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
+  },
+  {
+    scopes: {
+      withoutPassword: {
+        attributes: { exclude: ['password'] },
+      },
+    },
   });
 
   return User;

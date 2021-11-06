@@ -1,6 +1,7 @@
-import { User } from '../models';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
-const jwt = require('jsonwebtoken');
+import { User } from '../models';
 
 let refreshTokens = [];
 
@@ -32,7 +33,7 @@ function refreshTokenFunction(req, res) {
 }
 
 async function login(req, res) {
-  const { email } = req.body;
+  const { email, password } = req.body;
 
   const foundUsers = await User.findAll({
     where: { email },
@@ -41,10 +42,18 @@ async function login(req, res) {
   if (foundUsers.length === 0) {
     res.sendStatus(400);
   } else {
-    const accessToken = generateAccessToken(email);
-    const refreshToken = jwt.sign({ email }, process.env.REFRESH_TOKEN_SECRET);
-    refreshTokens.push(refreshToken);
-    res.status(200).json({ accessToken, refreshToken, user: foundUsers[0] });
+    const { name, email: userEmail, password: userPassword } = foundUsers[0];
+
+    if (crypto.createHash('sha256').update(password).digest('base64') === userPassword) {
+      const accessToken = generateAccessToken(email);
+      const refreshToken = jwt.sign({ email }, process.env.REFRESH_TOKEN_SECRET);
+      refreshTokens.push(refreshToken);
+      res.status(200).json({
+        accessToken, refreshToken, user: { name, email: userEmail },
+      });
+    } else {
+      res.sendStatus(401);
+    }
   }
 }
 

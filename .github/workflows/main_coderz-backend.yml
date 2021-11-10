@@ -22,9 +22,6 @@ jobs:
 
       - name: Build project
         run: npm run build
-        
-      - name: Migrate database
-        run: npx sequelize-cli db:migrate
 
       - name: Restart pm2
         env:

@@ -42,14 +42,20 @@ async function login(req, res) {
   if (foundUsers.length === 0) {
     res.sendStatus(400);
   } else {
-    const { name, email: userEmail, password: userPassword } = foundUsers[0];
+    const {
+      name, email: userEmail, password: userPassword, rank, xp,
+    } = foundUsers[0];
 
     if (crypto.createHash('sha256').update(password).digest('base64') === userPassword) {
       const accessToken = generateAccessToken(email);
       const refreshToken = jwt.sign({ email }, process.env.REFRESH_TOKEN_SECRET);
       refreshTokens.push(refreshToken);
       res.status(200).json({
-        accessToken, refreshToken, user: { name, email: userEmail },
+        accessToken,
+        refreshToken,
+        user: {
+          name, email: userEmail, rank, xp,
+        },
       });
     } else {
       res.sendStatus(401);

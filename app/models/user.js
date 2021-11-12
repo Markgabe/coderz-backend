@@ -3,6 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
+    rank: DataTypes.STRING,
+    xp: DataTypes.INTEGER,
   },
   {
     scopes: {

@@ -1,6 +1,8 @@
 import express from 'express';
 import userController from './controllers/userController';
 import loginController from './controllers/loginController';
+import challengeController from './controllers/challengeController';
+import testCaseController from './controllers/testCaseController';
 
 const router = express.Router();
 
@@ -14,5 +16,11 @@ router.post('/user', userController.createUser);
 router.use(loginController.authenticateToken);
 
 router.get('/users', userController.getAll);
+
+router.get('/challenges', challengeController.findAllChallenges);
+router.post('/challenge', challengeController.createChallenge);
+router.get('/challenge/:id/testCases', challengeController.findOneWithTestCases);
+
+router.post('/testCase', testCaseController.createTestCase);
 
 module.exports = router;

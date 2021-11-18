@@ -6,7 +6,7 @@ import { User } from '../models';
 let refreshTokens = [];
 
 function generateAccessToken(email) {
-  return jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+  return jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '60m' });
 }
 
 function authenticateToken(req, res, next) {

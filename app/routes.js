@@ -1,6 +1,7 @@
 import userController from './controllers/userController';
 import loginController from './controllers/loginController';
 import challengeController from './controllers/challengeController';
+import challengeSubmissionController from './controllers/challengeSubmissionController';
 import testCaseController from './controllers/testCaseController';
 
 const router = require('express').Router();
@@ -24,6 +25,9 @@ router.get('/users', userController.index);
 router.get('/challenges', challengeController.index);
 router.post('/challenge', challengeController.create);
 router.get('/challenge/:id/testCases', challengeController.findOneWithTestCases);
+
+// ChallengeSubmission routes
+router.post('/challenge/:id/submit', challengeSubmissionController.create);
 
 // TestCase routes
 router.post('/testCase', testCaseController.create);

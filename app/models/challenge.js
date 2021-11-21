@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Challenge.associate = (models) => {
     Challenge.hasMany(models.TestCase, { as: 'testCases', foreignKey: 'challengeId' });
+    Challenge.hasMany(models.ChallengeSubmission, { as: 'submissions', foreignKey: 'challengeId' });
   };
   return Challenge;
 };

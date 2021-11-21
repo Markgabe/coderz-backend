@@ -14,5 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
 
+  User.associate = (models) => {
+    User.hasMany(models.ChallengeSubmission, { as: 'submissions', foreignKey: 'userId' });
+  };
   return User;
 };

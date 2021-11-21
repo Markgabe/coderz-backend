@@ -1,7 +1,7 @@
 import { TestCase } from '../models';
 
 module.exports = {
-  async createTestCase(req, res) {
+  async create(req, res) {
     try {
       const { input, output, challengeId } = req.body;
       const testCase = await TestCase.create({
@@ -9,7 +9,7 @@ module.exports = {
       });
       res.json(testCase);
     } catch (error) {
-      res.status(403).json({ error });
+      res.status(403).json({ error: error.name });
     }
   },
 };

@@ -1,26 +1,31 @@
-import express from 'express';
 import userController from './controllers/userController';
 import loginController from './controllers/loginController';
 import challengeController from './controllers/challengeController';
 import testCaseController from './controllers/testCaseController';
 
-const router = express.Router();
+const router = require('express').Router();
 
+// Connection check route
 router.get('/', (req, res) => res.sendStatus(200));
+
+// Public routes
 router.post('/login', loginController.login);
 router.post('/token', loginController.refreshTokenFunction);
 router.delete('/logout', loginController.logout);
-router.post('/user', userController.createUser);
+router.post('/user', userController.create);
 
 // All routes bellow will pass through jwt authorization
 router.use(loginController.authenticateToken);
 
-router.get('/users', userController.getAll);
+// User routes
+router.get('/users', userController.index);
 
-router.get('/challenges', challengeController.findAllChallenges);
-router.post('/challenge', challengeController.createChallenge);
+// Challenge routes
+router.get('/challenges', challengeController.index);
+router.post('/challenge', challengeController.create);
 router.get('/challenge/:id/testCases', challengeController.findOneWithTestCases);
 
-router.post('/testCase', testCaseController.createTestCase);
+// TestCase routes
+router.post('/testCase', testCaseController.create);
 
 module.exports = router;

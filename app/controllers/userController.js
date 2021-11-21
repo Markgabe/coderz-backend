@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { User } from '../models';
 
 module.exports = {
-  async createUser(req, res) {
+  async create(req, res) {
     try {
       const { name, email, password } = req.body;
       const passwordHash = crypto.createHash('sha256').update(password).digest('base64');
@@ -18,7 +18,7 @@ module.exports = {
     }
   },
 
-  async getAll(req, res) {
+  async index(req, res) {
     const users = await User.scope('withoutPassword').findAll();
     res.json(users);
   },

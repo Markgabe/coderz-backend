@@ -1,7 +1,7 @@
 import { Challenge } from '../models';
 
 module.exports = {
-  async createChallenge(req, res) {
+  async create(req, res) {
     try {
       const challenge = await Challenge.create(req.body);
       res.json(challenge);
@@ -10,7 +10,7 @@ module.exports = {
     }
   },
 
-  async findAllChallenges(req, res) {
+  async index(req, res) {
     try {
       const challenges = await Challenge.findAll({ include: ['testCases'] });
       res.json(challenges);

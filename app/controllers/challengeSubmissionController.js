@@ -3,6 +3,10 @@ import { ChallengeSubmission, Challenge, User } from '../models';
 module.exports = {
   async create(req, res) {
     const COMPLETED_CHALLENGE_XP_RATIO = 0.2;
+    const submissionResult = {
+      xpGained: 0,
+      completionTime: null,
+    };
     try {
       const {
         successful, startedAt: rawStartedAt, finishedAt: rawFinishedAt,
@@ -24,16 +28,6 @@ module.exports = {
 
       const { id: userId, xp: userXp } = foundUsers[0];
 
-      // Create challenge submission
-      const challengeSubmission = await ChallengeSubmission.create({
-        successful, startedAt, finishedAt, challengeId, userId,
-      });
-
-      // Check if user failed
-      if (!successful) {
-        return res.json(challengeSubmission);
-      }
-
       // Get already sent submissions for this user and challenge
       const pastSubmissions = await ChallengeSubmission.findAll({
         where: {
@@ -41,6 +35,16 @@ module.exports = {
           challengeId,
         },
       });
+
+      // Create challenge submission
+      const challengeSubmission = await ChallengeSubmission.create({
+        successful, startedAt, finishedAt, challengeId, userId,
+      });
+
+      // Check if user failed
+      if (!successful) {
+        return res.json({ ...submissionResult, submission: challengeSubmission });
+      }
 
       // Get challenge's info
       const { gainedXP } = await Challenge.findByPk(challengeId);
@@ -55,6 +59,7 @@ module.exports = {
             id: userId,
           },
         });
+        submissionResult.xpGained = gainedXP;
         // TODO: Give user rank upgrade
       } else {
         // Check lowest user's completion time
@@ -72,10 +77,12 @@ module.exports = {
               },
             },
           );
+          submissionResult.xpGained = parseInt(gainedXP * COMPLETED_CHALLENGE_XP_RATIO, 10);
         }
       }
+      submissionResult.completionTime = finishedAt - startedAt;
 
-      res.json(challengeSubmission);
+      res.json({ ...submissionResult, submission: challengeSubmission });
     } catch (error) {
       res.status(403).json({ error: error.name });
     }

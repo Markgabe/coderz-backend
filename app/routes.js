@@ -22,7 +22,8 @@ router.use(loginController.authenticateToken);
 router.get('/users', userController.index);
 
 // Challenge routes
-router.get('/challenges', challengeController.index);
+router.get('/challenges/testCases', challengeController.index);
+router.get('/challenges', challengeController.indexWithUserCompletedInfo);
 router.post('/challenge', challengeController.create);
 router.get('/challenge/:id/testCases', challengeController.findOneWithTestCases);
 

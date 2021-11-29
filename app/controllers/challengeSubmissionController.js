@@ -1,4 +1,6 @@
-import { ChallengeSubmission, Challenge, User } from '../models';
+import { ChallengeSubmission, Challenge } from '../models';
+
+import { getUser, updateXP } from '../services/userService';
 
 module.exports = {
   async create(req, res) {
@@ -18,15 +20,7 @@ module.exports = {
 
       const { id: challengeId } = req.params;
 
-      // Get user's info
-      const { user: { email: username } } = req;
-      const foundUsers = await User.findAll({
-        where: {
-          email: username,
-        },
-      });
-
-      const { id: userId, xp: userXp } = foundUsers[0];
+      const { id: userId } = getUser(req);
 
       // Get already sent submissions for this user and challenge
       const pastSubmissions = await ChallengeSubmission.findAll({
@@ -54,11 +48,7 @@ module.exports = {
 
       if (!userCompletedChallenge) {
         // Give user challenge's base xp
-        await User.update({ xp: userXp + gainedXP }, {
-          where: {
-            id: userId,
-          },
-        });
+        updateXP(req, gainedXP);
         submissionResult.xpGained = gainedXP;
         // TODO: Give user rank upgrade
       } else {
@@ -70,13 +60,7 @@ module.exports = {
           // TODO: Give user rank upgrade
         } else {
           // Give user a ratio of challenge's xp
-          await User.update(
-            { xp: userXp + parseInt(gainedXP * COMPLETED_CHALLENGE_XP_RATIO, 10) }, {
-              where: {
-                id: userId,
-              },
-            },
-          );
+          await updateXP(req, gainedXP * COMPLETED_CHALLENGE_XP_RATIO);
           submissionResult.xpGained = parseInt(gainedXP * COMPLETED_CHALLENGE_XP_RATIO, 10);
         }
       }

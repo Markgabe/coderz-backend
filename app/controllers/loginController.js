@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import { User } from '../models';
 
+const Sequelize = require('sequelize');
+
 let refreshTokens = [];
 
 function generateAccessToken(email) {
@@ -36,7 +38,11 @@ async function login(req, res) {
   const { email, password } = req.body;
 
   const foundUsers = await User.findAll({
-    where: { email },
+    where: {
+      email: Sequelize.where(
+        Sequelize.fn('LOWER', Sequelize.col('email')), 'LIKE', `%${email}%`,
+      ),
+    },
   });
 
   if (foundUsers.length === 0) {

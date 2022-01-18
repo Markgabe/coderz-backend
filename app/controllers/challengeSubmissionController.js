@@ -20,7 +20,7 @@ module.exports = {
 
       const { id: challengeId } = req.params;
 
-      const { id: userId } = getUser(req);
+      const { id: userId } = await getUser(req);
 
       // Get already sent submissions for this user and challenge
       const pastSubmissions = await ChallengeSubmission.findAll({

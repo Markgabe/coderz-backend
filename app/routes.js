@@ -3,6 +3,7 @@ import loginController from './controllers/loginController';
 import challengeController from './controllers/challengeController';
 import challengeSubmissionController from './controllers/challengeSubmissionController';
 import testCaseController from './controllers/testCaseController';
+import rankController from './controllers/rankController';
 
 const router = require('express').Router();
 
@@ -32,5 +33,8 @@ router.post('/challenge/:id/submit', challengeSubmissionController.create);
 
 // TestCase routes
 router.post('/testCase', testCaseController.create);
+
+// Rank routes
+router.get('/rank', rankController.index);
 
 module.exports = router;

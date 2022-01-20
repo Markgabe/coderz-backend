@@ -40,7 +40,7 @@ async function login(req, res) {
   const foundUsers = await User.findAll({
     where: {
       email: Sequelize.where(
-        Sequelize.fn('LOWER', Sequelize.col('email')), 'LIKE', `%${email}%`,
+        Sequelize.fn('LOWER', Sequelize.col('email')), 'LIKE', `${email}`,
       ),
     },
   });

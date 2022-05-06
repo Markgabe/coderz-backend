@@ -21,9 +21,9 @@ app.use(router);
 
 if (process.env.ENVIRONMENT !== 'development') {
   const httpsServer = https.createServer({
-    cert: fs.readFileSync(path.join(homedir, 'cert', 'certificate.crt')),
-    ca: fs.readFileSync(path.join(homedir, 'cert', 'ca_bundle.crt')),
-    key: fs.readFileSync(path.join(homedir, 'cert', 'private.key')),
+    key: fs.readFileSync(path.join(homedir, '.certbot', 'config', 'archive', 'coderz-backend.tk', 'privkey1.pem')),
+    cert: fs.readFileSync(path.join(homedir, '.certbot', 'config', 'archive', 'coderz-backend.tk', 'cert1.pem')),
+    ca: fs.readFileSync(path.join(homedir, '.certbot', 'config', 'archive', 'coderz-backend.tk', 'chain1.pem')),
   }, app);
 
   httpsServer.listen(process.env.HTTPS_PORT || 3443);
